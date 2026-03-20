@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DICE-калькулятор | Quality Trek</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --qt-accent: #42becf;
+      --qt-accent-light: rgba(66,190,207,0.1); --qt-accent-border: rgba(66,190,207,0.4);
+      --qt-dark: #1a1a1a; --qt-muted: #6b6b6b;
+      --qt-border: #e8e8e8; --qt-surface: #f7f7f5; --qt-white: #ffffff;
+    }
+    body { background: #f0f0f0; display: flex; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .tg-app { max-width: 390px; width: 100%; background: var(--qt-surface); min-height: 100vh; position: relative; }
+    .tg-header { background: #0d3d47; padding: 18px 20px 0 20px; min-height: 118px; display: flex; align-items: flex-end; justify-content: space-between; }
+    .header-left { padding-bottom: 16px; flex: 1; }
+    .header-brand { font-size: 11px; font-weight: 500; color: var(--qt-accent); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; }
+    .tg-title { font-size: 21px; font-weight: 500; color: #fff; line-height: 1.2; margin-bottom: 2px; }
+    .tg-subtitle { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4; }
+    .header-bars { display: flex; align-items: flex-end; gap: 5px; height: 80px; flex-shrink: 0; }
+    .bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; }
+    .bar-label { font-size: 13px; font-weight: 500; color: var(--qt-accent); }
+    .bar-block { width: 20px; border-radius: 3px 3px 0 0; }
+    .tg-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .project-card { background: var(--qt-white); border-radius: 12px; padding: 12px 14px; border: 0.5px solid var(--qt-border); }
+    .project-label { font-size: 11px; font-weight: 500; color: var(--qt-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .project-input { width: 100%; padding: 9px 12px; border-radius: 8px; border: 0.5px solid var(--qt-border); background: var(--qt-surface); font-size: 14px; color: var(--qt-dark); font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+    .project-input::placeholder { color: #bbb; }
+    .param-card { background: var(--qt-white); border-radius: 12px; padding: 12px 14px; border: 0.5px solid var(--qt-border); }
+    .param-header { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .param-letter { font-size: 17px; font-weight: 500; color: var(--qt-accent); min-width: 24px; }
+    .param-name { font-size: 13px; font-weight: 500; color: var(--qt-dark); flex: 1; }
+    .hint-btn { width: 20px; height: 20px; border-radius: 50%; border: 0.5px solid #d0d0d0; background: var(--qt-surface); color: var(--qt-muted); font-size: 11px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none; }
+    .edit-btn { width: 20px; height: 20px; border-radius: 50%; border: 0.5px solid #d0d0d0; background: var(--qt-surface); color: var(--qt-muted); font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none; transition: border-color 0.12s, color 0.12s; }
+    .edit-btn:hover { border-color: var(--qt-accent); color: var(--qt-accent); }
+    .options { display: flex; flex-direction: column; gap: 4px; }
+    .option { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; border: 0.5px solid var(--qt-border); cursor: pointer; background: var(--qt-surface); transition: border-color 0.12s, background 0.12s; }
+    .option:hover { border-color: var(--qt-accent); }
+    .option.selected { background: var(--qt-accent-light); border-color: var(--qt-accent); }
+    .option-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid #ccc; flex-shrink: 0; transition: border-color 0.12s, background 0.12s; }
+    .option.selected .option-dot { background: var(--qt-accent); border-color: var(--qt-accent); }
+    .option-text { font-size: 12px; color: var(--qt-muted); line-height: 1.4; flex: 1; }
+    .option.selected .option-text { color: var(--qt-dark); }
+    .option-num { font-size: 11px; color: #ccc; flex-shrink: 0; }
+    .option.selected .option-num { color: var(--qt-accent); }
+    .result-card { background: var(--qt-white); border-radius: 12px; padding: 16px 14px; border: 0.5px solid var(--qt-border); }
+    .result-empty { text-align: center; padding: 8px 0 4px; color: var(--qt-muted); font-size: 13px; line-height: 1.5; }
+    .result-empty-hint { font-size: 11px; color: #bbb; margin-top: 4px; }
+    .result-filled { display: none; }
+    .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .progress-dots { display: flex; gap: 4px; }
+    .progress-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--qt-border); transition: background 0.2s; }
+    .progress-dot.done { background: var(--qt-accent); }
+    .progress-label { font-size: 11px; color: var(--qt-muted); }
+    .formula-row { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .formula-chip { font-size: 11px; padding: 2px 7px; border-radius: 6px; background: var(--qt-surface); color: var(--qt-muted); border: 0.5px solid var(--qt-border); }
+    .formula-chip.active { background: var(--qt-accent-light); color: var(--qt-accent); border-color: var(--qt-accent-border); }
+    .formula-plus { font-size: 11px; color: #ccc; }
+    .result-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .result-label { font-size: 12px; color: var(--qt-muted); margin-bottom: 2px; }
+    .result-score { font-size: 36px; font-weight: 500; color: var(--qt-dark); line-height: 1; }
+    .result-zone { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+    .zone-win  { background: rgba(59,109,17,0.1);  color: #3B6D11; }
+    .zone-warn { background: rgba(186,117,23,0.12); color: #854F0B; }
+    .zone-fail { background: rgba(226,75,74,0.12);  color: #A32D2D; }
+    .result-bar { height: 5px; border-radius: 3px; background: var(--qt-surface); overflow: hidden; margin-bottom: 10px; border: 0.5px solid var(--qt-border); }
+    .result-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease, background 0.3s ease; }
+    .result-desc { font-size: 12px; color: var(--qt-muted); line-height: 1.55; margin-bottom: 14px; }
+    .save-btn, .edit-save-btn { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--qt-border); background: var(--qt-white); color: var(--qt-dark); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .save-btn:active, .edit-save-btn:active { opacity: 0.85; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 10; }
+    .overlay.open { display: block; }
+    .bottom-sheet { position: fixed; left: 50%; transform: translateX(-50%) translateY(100%); width: 100%; max-width: 390px; bottom: 0; background: var(--qt-white); border-radius: 16px 16px 0 0; z-index: 11; padding: 0 20px 28px; transition: transform 0.28s cubic-bezier(0.32,0.72,0,1); max-height: 85%; overflow-y: auto; }
+    .bottom-sheet.open { transform: translateX(-50%) translateY(0); }
+    .sheet-handle-wrap { position: sticky; top: 0; background: var(--qt-white); padding-top: 10px; padding-bottom: 4px; display: flex; justify-content: center; z-index: 1; }
+    .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: #ddd; }
+    .sheet-top { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; margin-bottom: 12px; }
+    .sheet-top-title { font-size: 14px; font-weight: 500; color: var(--qt-dark); }
+    .sheet-close-x { width: 28px; height: 28px; border-radius: 50%; background: var(--qt-surface); border: 0.5px solid var(--qt-border); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--qt-muted); font-size: 14px; line-height: 1; flex-shrink: 0; }
+    .sheet-letter { font-size: 30px; font-weight: 500; color: var(--qt-accent); margin-bottom: 2px; }
+    .sheet-title { font-size: 15px; font-weight: 500; color: var(--qt-dark); margin-bottom: 8px; }
+    .sheet-weight { display: inline-flex; padding: 3px 10px; border-radius: 20px; background: var(--qt-accent-light); color: var(--qt-accent); font-size: 12px; font-weight: 500; margin-bottom: 12px; }
+    .sheet-body { font-size: 14px; color: var(--qt-muted); line-height: 1.65; }
+    .edit-field-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .edit-field-row { display: flex; align-items: center; gap: 10px; }
+    .edit-field-num { font-size: 13px; font-weight: 500; color: var(--qt-accent); width: 16px; flex-shrink: 0; }
+    .edit-field-input { flex: 1; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--qt-border); background: var(--qt-surface); font-size: 13px; color: var(--qt-dark); font-family: inherit; outline: none; transition: border-color 0.15s; }
+    .edit-field-input:focus { border-color: var(--qt-accent); }
+    .edit-note { font-size: 11px; color: #bbb; margin-bottom: 14px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<div class="tg-app" id="app">
+  <div class="tg-header">
+    <div class="header-left">
+      <div class="header-brand">Quality Trek</div>
+      <div class="tg-title">DICE-калькулятор</div>
+      <div class="tg-subtitle">Вероятность успешного внедрения</div>
+    </div>
+    <div class="header-bars">
+      <div class="bar-col"><div class="bar-label">D</div><div class="bar-block" style="height:52px;background:#42becf;"></div></div>
+      <div class="bar-col"><div class="bar-label">I</div><div class="bar-block" style="height:52px;background:#42becf;"></div></div>
+      <div class="bar-col"><div class="bar-label">C</div><div class="bar-block" style="height:52px;background:#42becf;"></div></div>
+      <div class="bar-col"><div class="bar-label">E</div><div class="bar-block" style="height:52px;background:rgba(255,255,255,0.18);"></div></div>
+    </div>
+  </div>
+
+  <div class="tg-body">
+    <div class="project-card">
+      <div class="project-label">Название проекта</div>
+      <input class="project-input" id="project-name" type="text" placeholder="Например: Внедрение автотестов" maxlength="80" />
+    </div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">D</span><span class="param-name">Duration — пересмотр прогресса</span><div class="hint-btn" onclick="openHint('D')">?</div><div class="edit-btn" onclick="openEdit('D')">✎</div></div><div class="options" id="D"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">I</span><span class="param-name">Integrity — компетентность команды</span><div class="hint-btn" onclick="openHint('I')">?</div><div class="edit-btn" onclick="openEdit('I')">✎</div></div><div class="options" id="I"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">C1</span><span class="param-name">Commitment — поддержка руководства</span><div class="hint-btn" onclick="openHint('C1')">?</div><div class="edit-btn" onclick="openEdit('C1')">✎</div></div><div class="options" id="C1"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">C2</span><span class="param-name">Commitment — поддержка команды</span><div class="hint-btn" onclick="openHint('C2')">?</div><div class="edit-btn" onclick="openEdit('C2')">✎</div></div><div class="options" id="C2"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">E</span><span class="param-name">Effort — нагрузка сверх основной работы</span><div class="hint-btn" onclick="openHint('E')">?</div><div class="edit-btn" onclick="openEdit('E')">✎</div></div><div class="options" id="E"></div></div>
+
+    <div class="result-card">
+      <div class="progress-row">
+        <div class="progress-dots">
+          <div class="progress-dot" id="pd-D"></div><div class="progress-dot" id="pd-I"></div>
+          <div class="progress-dot" id="pd-C1"></div><div class="progress-dot" id="pd-C2"></div>
+          <div class="progress-dot" id="pd-E"></div>
+        </div>
+        <div class="progress-label" id="progress-label">Выберите все параметры</div>
+      </div>
+      <div class="result-empty" id="result-empty">
+        Заполните все 5 параметров<br>
+        <div class="result-empty-hint">результат появится автоматически</div>
+      </div>
+      <div class="result-filled" id="result-filled">
+        <div class="formula-row">
+          <span class="formula-chip active" id="chip-D">D=—</span><span class="formula-plus">+</span>
+          <span class="formula-chip active" id="chip-I">2×I=—</span><span class="formula-plus">+</span>
+          <span class="formula-chip active" id="chip-C1">2×C1=—</span><span class="formula-plus">+</span>
+          <span class="formula-chip active" id="chip-C2">C2=—</span><span class="formula-plus">+</span>
+          <span class="formula-chip active" id="chip-E">E=—</span>
+        </div>
+        <div class="result-row">
+          <div><div class="result-label">Итого</div><div class="result-score" id="score">—</div></div>
+          <div class="result-zone" id="zone"></div>
+        </div>
+        <div class="result-bar"><div class="result-fill" id="bar" style="width:0%;"></div></div>
+        <div class="result-desc" id="desc"></div>
+        <button class="save-btn" id="save-btn" onclick="saveResult()"><span>↓</span> Сохранить результат</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+  <div class="bottom-sheet" id="hint-sheet">
+    <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+    <div class="sheet-top"><span class="sheet-top-title"></span><button class="sheet-close-x" onclick="closeAll()">✕</button></div>
+    <div class="sheet-letter" id="hint-letter"></div>
+    <div class="sheet-title" id="hint-title"></div>
+    <div class="sheet-weight" id="hint-weight"></div>
+    <div class="sheet-body" id="hint-body"></div>
+  </div>
+
+  <div class="bottom-sheet" id="edit-sheet">
+    <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+    <div class="sheet-top"><span class="sheet-top-title" id="edit-sheet-title">Редактировать варианты</span><button class="sheet-close-x" onclick="closeAll()">✕</button></div>
+    <p class="edit-note">Текст вариантов — только для отображения. Оценка (1–4) не меняется.</p>
+    <div class="edit-field-group" id="edit-fields"></div>
+    <button class="edit-save-btn" id="edit-save-btn" onclick="applyEdit()">Применить</button>
+  </div>
+</div>
+
+<script>
+const order = ['D','I','C1','C2','E'];
+const vals = { D:null, I:null, C1:null, C2:null, E:null };
+const labels = {
+  D:  ['Пересмотр раз в 1–2 недели','Пересмотр раз в 3–4 недели','Раз в 2 месяца','Во всех остальных случаях'],
+  I:  ['Руководитель и команда — профессионалы','Скорее да','Скорее нет','Плохо по всем показателям'],
+  C1: ['Руководство поддерживает проект','Нейтрально','Скрыто не поддерживает','Открыто не поддерживает'],
+  C2: ['Охотно принимают изменения','В принципе не возражают','Сопротивляются','Возражают крайне резко'],
+  E:  ['До 10% или это основная работа','11–20%','21–40%','Более 40%']
+};
+const hints = {
+  D:  { title: 'Duration — частота пересмотра прогресса', weight: 'Коэффициент ×1', body: 'Чем чаще команда останавливается и проверяет, куда движется — тем быстрее выявляются отклонения. Долгие промежутки без контроля дают проблемам время разрастись. Оцените реальную частоту встреч, а не ту, что написана в плане.' },
+  I:  { title: 'Integrity — компетентность команды', weight: 'Коэффициент ×2 — самый весомый параметр', body: 'Самый важный фактор в формуле. Если лидер слаб или команда не справляется с задачами — никакая поддержка сверху не спасет инициативу. Оцените реальный профессионализм, а не формальный грейд или стаж.' },
+  C1: { title: 'Commitment — поддержка руководства', weight: 'Коэффициент ×2', body: 'Руководство определяет ресурсы, приоритеты и сигналы для всей организации. Скрытое несогласие опаснее открытого — команда считывает настроение и теряет мотивацию, даже если сверху формально "одобрено".' },
+  C2: { title: 'Commitment — вовлеченность команды', weight: 'Коэффициент ×1', body: 'Без вовлеченности исполнителей даже идеально спланированная инициатива буксует. Сопротивление редко бывает открытым — чаще это пассивный саботаж, имитация работы и затягивание сроков.' },
+  E:  { title: 'Effort — дополнительная нагрузка', weight: 'Коэффициент ×1', body: 'Люди берутся за инициативы поверх основной работы. Если перегруз превышает 40% — качество падает, люди выгорают, сроки срываются. Оцените честно: не по плану, а по факту.' }
+};
+const zones = {
+  win:  { barColor: '#639922', textColor: '#3B6D11', inputShadow: 'rgba(99,153,34,0.15)' },
+  warn: { barColor: '#BA7517', textColor: '#854F0B', inputShadow: 'rgba(186,117,23,0.15)' },
+  fail: { barColor: '#E24B4A', textColor: '#A32D2D', inputShadow: 'rgba(226,75,74,0.15)' }
+};
+let currentScore = null, currentZone = '', currentDesc = '', currentZoneObj = null;
+let editingParam = null;
+
+function setIdleStyle(btn, label) {
+  btn.style.background = '#ffffff'; btn.style.borderColor = '#e8e8e8';
+  btn.style.color = '#1a1a1a'; btn.style.cursor = 'pointer';
+  btn.innerHTML = label; btn.disabled = false;
+  btn.onmouseenter = () => { btn.style.background = '#EEF8FA'; };
+  btn.onmouseleave = () => { btn.style.background = '#ffffff'; };
+}
+
+function renderOptions(param) {
+  const container = document.getElementById(param);
+  container.innerHTML = '';
+  labels[param].forEach((text, i) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (vals[param] === i+1 ? ' selected' : '');
+    div.onclick = () => sel(param, i+1, div);
+    div.innerHTML = '<div class="option-dot"></div><div class="option-text">'+text+'</div><span class="option-num">'+(i+1)+'</span>';
+    container.appendChild(div);
+  });
+}
+order.forEach(p => renderOptions(p));
+
+function openHint(p) {
+  const h = hints[p];
+  document.getElementById('hint-letter').textContent = p;
+  document.getElementById('hint-title').textContent = h.title;
+  document.getElementById('hint-weight').textContent = h.weight;
+  document.getElementById('hint-body').textContent = h.body;
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('hint-sheet').classList.add('open');
+}
+
+function openEdit(p) {
+  editingParam = p;
+  document.getElementById('edit-sheet-title').textContent = 'Варианты для ' + p;
+  const fields = document.getElementById('edit-fields');
+  fields.innerHTML = '';
+  labels[p].forEach((text, i) => {
+    const row = document.createElement('div');
+    row.className = 'edit-field-row';
+    row.innerHTML = '<span class="edit-field-num">'+(i+1)+'</span><input class="edit-field-input" id="ef-'+i+'" value="'+text+'" maxlength="80" />';
+    fields.appendChild(row);
+  });
+  setIdleStyle(document.getElementById('edit-save-btn'), 'Применить');
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('edit-sheet').classList.add('open');
+}
+
+function applyEdit() {
+  if (!editingParam) return;
+  for (let i = 0; i < 4; i++) {
+    const val = document.getElementById('ef-' + i).value.trim();
+    if (val) labels[editingParam][i] = val;
+  }
+  renderOptions(editingParam);
+  const btn = document.getElementById('edit-save-btn');
+  btn.onmouseenter = null; btn.onmouseleave = null;
+  btn.style.background = '#41bfd0'; btn.style.borderColor = '#41bfd0';
+  btn.style.color = '#ffffff'; btn.style.cursor = 'default';
+  btn.textContent = 'Применено'; btn.disabled = true;
+  setTimeout(() => { setIdleStyle(btn, 'Применить'); }, 3000);
+}
+
+function closeAll() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('hint-sheet').classList.remove('open');
+  document.getElementById('edit-sheet').classList.remove('open');
+}
+
+function sel(param, val, el) {
+  vals[param] = val;
+  document.querySelectorAll('#' + param + ' .option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  update();
+}
+
+function setIdleBtn() {
+  setIdleStyle(document.getElementById('save-btn'), '<span>↓</span> Сохранить результат');
+}
+
+function applyZoneToInput(z) {
+  const input = document.getElementById('project-name');
+  input.onfocus = () => { input.style.borderColor = z.barColor; input.style.boxShadow = '0 0 0 3px ' + z.inputShadow; };
+  input.onblur = () => { input.style.borderColor = ''; input.style.boxShadow = ''; };
+}
+
+function update() {
+  const done = order.filter(p => vals[p] !== null).length;
+  order.forEach(p => { document.getElementById('pd-' + p).classList.toggle('done', vals[p] !== null); });
+  const allDone = done === 5;
+  document.getElementById('progress-label').textContent = allDone ? 'Все параметры заполнены' : 'Заполнено ' + done + ' из 5';
+  document.getElementById('result-empty').style.display = allDone ? 'none' : 'block';
+  document.getElementById('result-filled').style.display = allDone ? 'block' : 'none';
+  if (!allDone) return;
+
+  const score = vals.D + 2*vals.I + 2*vals.C1 + vals.C2 + vals.E;
+  currentScore = score;
+  document.getElementById('score').textContent = score;
+  document.getElementById('chip-D').textContent = 'D=' + vals.D;
+  document.getElementById('chip-I').textContent = '2xI=' + (2*vals.I);
+  document.getElementById('chip-C1').textContent = '2xC1=' + (2*vals.C1);
+  document.getElementById('chip-C2').textContent = 'C2=' + vals.C2;
+  document.getElementById('chip-E').textContent = 'E=' + vals.E;
+  const pct = Math.round(((score - 7) / 21) * 100);
+  document.getElementById('bar').style.width = pct + '%';
+  const zone = document.getElementById('zone'), desc = document.getElementById('desc');
+  if (score <= 13) {
+    document.getElementById('bar').style.background = zones.win.barColor;
+    zone.className = 'result-zone zone-win'; zone.textContent = 'Выигрыш';
+    currentZone = 'Выигрыш (7–13)'; currentDesc = 'Высокая вероятность успеха. Проект хорошо подготовлен — команда компетентна, руководство поддерживает, прогресс под контролем.'; currentZoneObj = zones.win;
+  } else if (score <= 17) {
+    document.getElementById('bar').style.background = zones.warn.barColor;
+    zone.className = 'result-zone zone-warn'; zone.textContent = 'Беспокойство';
+    currentZone = 'Беспокойство (14–17)'; currentDesc = 'Рискованная зона. Нужно внимательно следить и устранять слабые места — иначе проект может забуксовать.'; currentZoneObj = zones.warn;
+  } else {
+    document.getElementById('bar').style.background = zones.fail.barColor;
+    zone.className = 'result-zone zone-fail'; zone.textContent = 'Проблема';
+    currentZone = 'Проблема (18+)'; currentDesc = 'Высокий риск провала. Особенно опасно от 19 баллов — стоит пересмотреть команду, поддержку или сам формат инициативы.'; currentZoneObj = zones.fail;
+  }
+  desc.textContent = currentDesc;
+  setIdleBtn();
+  applyZoneToInput(currentZoneObj);
+}
+
+function saveResult() {
+  const name = document.getElementById('project-name').value.trim() || 'Без названия';
+  const date = new Date().toLocaleDateString('ru-RU');
+  const lines = [
+    'DICE-калькулятор | Quality Trek','================================','',
+    'Проект: ' + name,'Дата:   ' + date,'',
+    'ПАРАМЕТРЫ','---------',
+    'D  (Duration):              ' + vals.D + ' — ' + labels.D[vals.D-1],
+    'I  (Integrity):             ' + vals.I + ' — ' + labels.I[vals.I-1],
+    'C1 (Commitment — рук-во):   ' + vals.C1 + ' — ' + labels.C1[vals.C1-1],
+    'C2 (Commitment — команда):  ' + vals.C2 + ' — ' + labels.C2[vals.C2-1],
+    'E  (Effort):                ' + vals.E + ' — ' + labels.E[vals.E-1],
+    '','РЕЗУЛЬТАТ','---------',
+    'Формула: D + 2xI + 2xC1 + C2 + E',
+    '       = ' + vals.D + ' + ' + (2*vals.I) + ' + ' + (2*vals.C1) + ' + ' + vals.C2 + ' + ' + vals.E + ' = ' + currentScore,
+    '','Зона:    ' + currentZone,'Вывод:   ' + currentDesc,
+    '','================================','quality-trek.ru/dice'
+  ];
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = name.replace(/[^\w\s]/g,'').trim().replace(/\s+/g,'_').slice(0,40) || 'dice';
+  a.href = url; a.download = 'DICE_' + safeName + '_' + date.replace(/\./g,'-') + '.txt'; a.click();
+  URL.revokeObjectURL(url);
+  const btn = document.getElementById('save-btn');
+  btn.onmouseenter = null; btn.onmouseleave = null;
+  btn.style.background = '#41bfd0'; btn.style.borderColor = '#41bfd0';
+  btn.style.color = '#ffffff'; btn.style.cursor = 'default';
+  btn.textContent = 'Сохранено';
+  setTimeout(() => { setIdleBtn(); }, 3000);
+}
+
+update();
+</script>
+</body>
+</html>
