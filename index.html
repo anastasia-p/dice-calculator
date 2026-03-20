@@ -344,16 +344,25 @@ function saveResult() {
     'DICE-калькулятор | Quality Trek','================================','',
     'Проект: ' + name,'Дата:   ' + date,'',
     'ПАРАМЕТРЫ','---------',
-    'D  (Duration):              ' + vals.D + ' — ' + labels.D[vals.D-1],
-    'I  (Integrity):             ' + vals.I + ' — ' + labels.I[vals.I-1],
-    'C1 (Commitment — рук-во):   ' + vals.C1 + ' — ' + labels.C1[vals.C1-1],
-    'C2 (Commitment — команда):  ' + vals.C2 + ' — ' + labels.C2[vals.C2-1],
-    'E  (Effort):                ' + vals.E + ' — ' + labels.E[vals.E-1],
+    'D  (Duration):',
+    vals.D + ' — ' + labels.D[vals.D-1],
+    '',
+    'I  (Integrity):',
+    vals.I + ' — ' + labels.I[vals.I-1],
+    '',
+    'C1 (Commitment — рук-во):',
+    vals.C1 + ' — ' + labels.C1[vals.C1-1],
+    '',
+    'C2 (Commitment — команда):',
+    vals.C2 + ' — ' + labels.C2[vals.C2-1],
+    '',
+    'E  (Effort):',
+    vals.E + ' — ' + labels.E[vals.E-1],
     '','РЕЗУЛЬТАТ','---------',
     'Формула: D + 2×I + 2×C1 + C2 + E',
     '       = ' + vals.D + ' + ' + (2*vals.I) + ' + ' + (2*vals.C1) + ' + ' + vals.C2 + ' + ' + vals.E + ' = ' + currentScore,
     '','Зона:    ' + currentZone,'Вывод:   ' + currentDesc,
-    '','================================','quality-trek.ru/dice'
+    '','================================','https://quality-trek.ru'
   ];
   const text = lines.join('\n');
   const btn = document.getElementById('save-btn');
