@@ -122,3 +122,23 @@ body { background: #f0f0f0; display: flex; justify-content: center; font-family:
 .participant-name-optional { font-size: 11px; color: var(--qt-muted); }
 .participant-name-hint { font-size: 12px; color: var(--qt-muted); margin-top: 8px; }
 .setup-screen-title { font-size: 18px; font-weight: 600; color: var(--qt-dark); }
+
+/* ── Экран 4: Ожидание ── */
+.waiting-card { background: var(--qt-white); border-radius: 12px; border: 0.5px solid var(--qt-border); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.waiting-progress-header { display: flex; align-items: center; justify-content: space-between; }
+.waiting-progress-text { font-size: 13px; font-weight: 500; color: var(--qt-dark); }
+.waiting-bar { height: 5px; border-radius: 3px; background: var(--qt-surface); border: 0.5px solid var(--qt-border); overflow: hidden; }
+.waiting-bar-fill { height: 100%; border-radius: 3px; background: var(--qt-accent); transition: width 0.4s ease; }
+.waiting-participants { display: flex; flex-direction: column; gap: 8px; }
+.waiting-participant-row { display: flex; align-items: center; gap: 10px; }
+.participant-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.waiting-participant-name { flex: 1; font-size: 14px; color: var(--qt-dark); }
+.organizer-badge { font-size: 11px; color: var(--qt-muted); font-weight: 400; }
+.waiting-status { font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.waiting-status-done { color: #639922; }
+.waiting-status-wait { color: var(--qt-muted); }
+.waiting-finish-btn { border-color: #E24B4A; color: #E24B4A; }
+.waiting-finish-btn:hover { background: rgba(226,75,74,0.06); }
+#waiting-organizer-actions { display: flex; flex-direction: column; gap: 0; background: var(--qt-white); border-radius: 12px; border: 0.5px solid var(--qt-border); overflow: hidden; }
+#waiting-organizer-actions .setup-action-row { padding: 12px 14px; }
+#waiting-organizer-actions .setup-divider { margin: 0; }

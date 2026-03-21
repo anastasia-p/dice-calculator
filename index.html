@@ -163,6 +163,35 @@
     </div>
   </div>
 
+  <!-- Экран 4: Ожидание -->
+  <div class="tg-body" id="screen-waiting" style="display:none;">
+    <div class="project-card">
+      <div class="project-label">Проект</div>
+      <div class="project-name-display" id="waiting-project-name">Без названия</div>
+    </div>
+
+    <div class="waiting-card">
+      <div class="waiting-progress-header">
+        <span class="waiting-progress-text" id="waiting-progress-text">Ответили 0 из 1</span>
+      </div>
+      <div class="waiting-bar"><div class="waiting-bar-fill" id="waiting-bar-fill" style="width:0%"></div></div>
+      <div class="waiting-participants" id="waiting-participants"></div>
+    </div>
+
+    <div class="setup-info-card">Результаты появятся когда организатор завершит сессию</div>
+
+    <div id="waiting-organizer-actions" style="display:none;">
+      <div class="setup-action-row">
+        <button class="action-btn" onclick="shareAgain()">⬆ Поделиться ссылкой ещё раз</button>
+      </div>
+      <div class="setup-divider"></div>
+      <div class="setup-action-row">
+        <button class="action-btn waiting-finish-btn" onclick="finishSession()">⏹ Завершить сессию</button>
+        <div class="action-hint">Результаты станут доступны всем участникам</div>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
   <div class="bottom-sheet" id="hint-sheet">
@@ -188,5 +217,6 @@
 <script src="js/screens/start.js"></script>
 <script src="js/screens/setup.js"></script>
 <script src="js/screens/calculator.js"></script>
+<script src="js/screens/waiting.js"></script>
 </body>
 </html>

@@ -21,3 +21,14 @@ const zones = {
   warn: { barColor: '#BA7517', textColor: '#854F0B', inputShadow: 'rgba(186,117,23,0.15)' },
   fail: { barColor: '#E24B4A', textColor: '#A32D2D', inputShadow: 'rgba(226,75,74,0.15)' }
 };
+
+const PARTICIPANT_COLORS = [
+  { bg: 'rgba(66,190,207,0.2)',  text: '#0a7a8a' },
+  { bg: 'rgba(139,92,246,0.15)', text: '#6d28d9' },
+  { bg: 'rgba(249,115,22,0.15)', text: '#c2410c' },
+  { bg: 'rgba(16,185,129,0.15)', text: '#065f46' },
+  { bg: 'rgba(236,72,153,0.15)', text: '#9d174d' },
+  { bg: 'rgba(234,179,8,0.15)',  text: '#854d0e' },
+  { bg: 'rgba(99,102,241,0.15)', text: '#3730a3' },
+  { bg: 'rgba(239,68,68,0.15)',  text: '#991b1b' },
+];
