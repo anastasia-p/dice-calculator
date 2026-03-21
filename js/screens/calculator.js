@@ -12,6 +12,7 @@ function setIdleStyle(btn, label) {
 
 function renderOptions(param) {
   const container = document.getElementById(param);
+  if (!container) return;
   container.innerHTML = '';
   labels[param].forEach((text, i) => {
     const div = document.createElement('div');
@@ -78,7 +79,10 @@ function sel(param, val, el) {
 }
 
 function setIdleBtn() {
-  setIdleStyle(document.getElementById('save-btn'), '<span>⎘</span> Скопировать результат');
+  const label = currentMode === 'team'
+    ? '✓ Отправить оценку'
+    : '<span>⎘</span> Скопировать результат';
+  setIdleStyle(document.getElementById('save-btn'), label);
 }
 
 function applyZoneToInput(z) {
@@ -132,6 +136,19 @@ function update() {
 }
 
 function saveResult() {
+  const btn = document.getElementById('save-btn');
+
+  // Командный режим — отправляем оценку
+  if (currentMode === 'team') {
+    btn.onmouseenter = null; btn.onmouseleave = null;
+    btn.style.background = '#41bfd0'; btn.style.borderColor = '#41bfd0';
+    btn.style.color = '#ffffff'; btn.style.cursor = 'default';
+    btn.textContent = 'Оценка отправлена'; btn.disabled = true;
+    setTimeout(() => { showScreen('waiting'); }, 1000);
+    return;
+  }
+
+  // Соло — копируем результат
   const name = document.getElementById('project-name').value.trim() || 'Без названия';
   const date = new Date().toLocaleDateString('ru-RU');
   const lines = [
@@ -150,7 +167,6 @@ function saveResult() {
     '', '================================', 'https://quality-trek.ru'
   ];
   const text = lines.join('\n');
-  const btn = document.getElementById('save-btn');
 
   const onCopied = () => {
     if (typeof ym !== 'undefined') ym(108173318, 'reachGoal', 'copy_result');
@@ -171,6 +187,23 @@ function saveResult() {
 }
 
 function initCalculator() {
+  const isTeam = currentMode === 'team';
+
+  // Название проекта: поле ввода (соло) или текст (команда)
+  document.getElementById('project-card-solo').style.display = isTeam ? 'none' : 'block';
+  document.getElementById('project-card-team').style.display = isTeam ? 'block' : 'none';
+  document.getElementById('participant-name-card').style.display = isTeam ? 'block' : 'none';
+  if (isTeam) document.getElementById('participant-name').value = '';
+
+  // Кнопки ✎ редактирования вариантов — только в соло-режиме
+  document.querySelectorAll('.calc-edit-btn').forEach(btn => {
+    btn.style.display = isTeam ? 'none' : '';
+  });
+
+  // Сброс значений при каждом входе в калькулятор
+  order.forEach(p => { vals[p] = null; });
+  if (!isTeam) document.getElementById('project-name').value = '';
+
   order.forEach(p => renderOptions(p));
   update();
 }

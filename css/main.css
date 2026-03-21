@@ -94,3 +94,31 @@ body { background: #f0f0f0; display: flex; justify-content: center; font-family:
 .mode-content { flex: 1; }
 .mode-title { font-size: 15px; font-weight: 600; color: var(--qt-dark); margin-bottom: 4px; transition: color 0.15s; }
 .mode-desc { font-size: 13px; color: var(--qt-muted); line-height: 1.4; }
+
+/* ── Экран 2: Настройка сессии ── */
+.back-btn { background: none; border: none; color: var(--qt-muted); font-size: 14px; font-family: inherit; cursor: pointer; padding: 0; text-align: left; }
+.back-btn:hover { color: var(--qt-dark); }
+.setup-params-card { background: var(--qt-white); border-radius: 12px; border: 0.5px solid var(--qt-border); overflow: hidden; }
+.setup-params-header { padding: 12px 14px 10px; }
+.setup-params-title { font-size: 11px; font-weight: 600; color: var(--qt-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+.setup-params-subtitle { font-size: 12px; color: var(--qt-muted); line-height: 1.4; }
+.setup-param-row { display: flex; align-items: center; gap: 8px; padding: 13px 14px; }
+.setup-param-name { font-size: 14px; color: var(--qt-dark); flex: 1; }
+.setup-param-divider { height: 0.5px; background: var(--qt-border); }
+.create-btn { width: 100%; padding: 13px; border-radius: 10px; border: 1px solid var(--qt-accent); background: #fff; color: var(--qt-accent); font-size: 15px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.create-btn:hover { background: var(--qt-accent-light); }
+.create-btn:disabled { cursor: default; }
+.setup-info-card { background: var(--qt-accent-light); border: 0.5px solid var(--qt-accent-border); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: #0a7a8a; line-height: 1.5; }
+.setup-actions-card { background: var(--qt-white); border-radius: 12px; border: 0.5px solid var(--qt-border); overflow: hidden; }
+.setup-action-row { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; }
+.action-btn { width: 100%; padding: 11px; height: 44px; border-radius: 10px; border: 1px solid var(--qt-border); background: var(--qt-white); color: var(--qt-dark); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+.action-btn:hover { background: #EEF8FA; }
+.action-hint { font-size: 11px; color: var(--qt-muted); padding: 0 2px; }
+.setup-divider { height: 0.5px; background: var(--qt-border); }
+#setup-after { flex-direction: column; gap: 12px; }
+.project-name-display { font-size: 16px; font-weight: 600; color: var(--qt-dark); margin-top: 4px; }
+.participant-name-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.participant-name-label { font-size: 11px; font-weight: 600; color: var(--qt-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+.participant-name-optional { font-size: 11px; color: var(--qt-muted); }
+.participant-name-hint { font-size: 12px; color: var(--qt-muted); margin-top: 8px; }
+.setup-screen-title { font-size: 18px; font-weight: 600; color: var(--qt-dark); }

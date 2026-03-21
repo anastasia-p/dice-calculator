@@ -1,4 +1,5 @@
 const SCREENS = ['start', 'calculator', 'setup', 'waiting', 'results'];
+let currentMode = 'solo'; // 'solo' | 'team'
 
 function showScreen(name) {
   SCREENS.forEach(s => {
@@ -9,6 +10,7 @@ function showScreen(name) {
   if (target) target.style.display = 'flex';
 
   if (name === 'calculator') initCalculator();
+  if (name === 'setup') initSetup();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

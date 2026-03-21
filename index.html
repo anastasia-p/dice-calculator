@@ -38,7 +38,7 @@
   <!-- Экран 1: Старт -->
   <div class="tg-body" id="screen-start">
     <div class="start-heading">Как хотите оценить проект?</div>
-    <div class="mode-card" onclick="showScreen('calculator')">
+    <div class="mode-card" onclick="startSolo()">
       <div class="mode-icon-wrap">👤</div>
       <div class="mode-content">
         <div class="mode-title">Оценю сам</div>
@@ -54,17 +54,82 @@
     </div>
   </div>
 
+  <!-- Экран 2: Настройка сессии -->
+  <div class="tg-body" id="screen-setup" style="display:none;">
+    <button class="back-btn" onclick="showScreen('start')">← Назад</button>
+    <div class="setup-screen-title">Настройте сессию оценки проекта</div>
+
+    <div class="project-card">
+      <div class="project-label">Название проекта</div>
+      <input class="project-input" id="setup-project-name" type="text" placeholder="Например: Внедрение автотестов" maxlength="80" />
+    </div>
+
+    <div class="setup-params-card">
+      <div class="setup-params-header">
+        <div class="setup-params-title">Параметры оценки</div>
+        <div class="setup-params-subtitle">Можно изменить формулировки вариантов под ваш контекст</div>
+      </div>
+      <div class="setup-param-divider"></div>
+      <div class="setup-param-row"><span class="param-letter">D</span><span class="setup-param-name">Duration</span><div class="edit-btn" onclick="openEdit('D')">✎</div></div>
+      <div class="setup-param-divider"></div>
+      <div class="setup-param-row"><span class="param-letter">I</span><span class="setup-param-name">Integrity</span><div class="edit-btn" onclick="openEdit('I')">✎</div></div>
+      <div class="setup-param-divider"></div>
+      <div class="setup-param-row"><span class="param-letter">C1</span><span class="setup-param-name">Commitment — руководство</span><div class="edit-btn" onclick="openEdit('C1')">✎</div></div>
+      <div class="setup-param-divider"></div>
+      <div class="setup-param-row"><span class="param-letter">C2</span><span class="setup-param-name">Commitment — команда</span><div class="edit-btn" onclick="openEdit('C2')">✎</div></div>
+      <div class="setup-param-divider"></div>
+      <div class="setup-param-row"><span class="param-letter">E</span><span class="setup-param-name">Effort</span><div class="edit-btn" onclick="openEdit('E')">✎</div></div>
+    </div>
+
+    <button class="create-btn" id="create-btn" onclick="createSession()">Создать сессию</button>
+
+    <div id="setup-after" style="display:none;">
+      <div class="setup-info-card">Отправьте ссылку всем участникам — каждый заполнит оценку независимо, и вы увидите расхождения</div>
+      <div class="setup-actions-card">
+        <div class="setup-action-row">
+          <button class="action-btn" id="share-btn" onclick="shareSession()">⬆ Поделиться</button>
+          <div class="action-hint">Выберите куда отправить — шторка с приложениями</div>
+        </div>
+        <div class="setup-param-divider"></div>
+        <div class="setup-action-row">
+          <button class="action-btn" id="copy-link-btn" onclick="copySessionLink()">⎘ Скопировать</button>
+          <div class="action-hint">Ссылка скопируется, апп свернется</div>
+        </div>
+      </div>
+      <div class="setup-divider"></div>
+      <div class="setup-action-row">
+        <button class="action-btn" onclick="goToCalculator()">→ Перейти к заполнению</button>
+        <div class="action-hint">Заполните свою оценку как организатор</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Экран 3: Калькулятор -->
   <div class="tg-body" id="screen-calculator" style="display:none;">
-    <div class="project-card">
+    <!-- Соло: редактируемое поле -->
+    <div class="project-card" id="project-card-solo">
       <div class="project-label">Название проекта</div>
       <input class="project-input" id="project-name" type="text" placeholder="Например: Внедрение автотестов" maxlength="80" />
     </div>
-    <div class="param-card"><div class="param-header"><span class="param-letter">D</span><span class="param-name">Duration — пересмотр прогресса</span><div class="hint-btn" onclick="openHint('D')">?</div><div class="edit-btn" onclick="openEdit('D')">✎</div></div><div class="options" id="D"></div></div>
-    <div class="param-card"><div class="param-header"><span class="param-letter">I</span><span class="param-name">Integrity — компетентность команды</span><div class="hint-btn" onclick="openHint('I')">?</div><div class="edit-btn" onclick="openEdit('I')">✎</div></div><div class="options" id="I"></div></div>
-    <div class="param-card"><div class="param-header"><span class="param-letter">C1</span><span class="param-name">Commitment — поддержка руководства</span><div class="hint-btn" onclick="openHint('C1')">?</div><div class="edit-btn" onclick="openEdit('C1')">✎</div></div><div class="options" id="C1"></div></div>
-    <div class="param-card"><div class="param-header"><span class="param-letter">C2</span><span class="param-name">Commitment — поддержка команды</span><div class="hint-btn" onclick="openHint('C2')">?</div><div class="edit-btn" onclick="openEdit('C2')">✎</div></div><div class="options" id="C2"></div></div>
-    <div class="param-card"><div class="param-header"><span class="param-letter">E</span><span class="param-name">Effort — нагрузка сверх основной работы</span><div class="hint-btn" onclick="openHint('E')">?</div><div class="edit-btn" onclick="openEdit('E')">✎</div></div><div class="options" id="E"></div></div>
+    <!-- Команда: только чтение -->
+    <div class="project-card" id="project-card-team" style="display:none;">
+      <div class="project-label">Проект</div>
+      <div class="project-name-display" id="project-name-display">Без названия</div>
+    </div>
+    <div class="project-card" id="participant-name-card" style="display:none;">
+      <div class="participant-name-header">
+        <span class="participant-name-label">Ваше имя</span>
+        <span class="participant-name-optional">необязательно</span>
+      </div>
+      <input class="project-input" id="participant-name" type="text" placeholder="Имя" maxlength="40" />
+      <div class="participant-name-hint" id="participant-name-hint">Если не заполнено — будет отображаться как Участник 1</div>
+    </div>
+
+    <div class="param-card"><div class="param-header"><span class="param-letter">D</span><span class="param-name">Duration — пересмотр прогресса</span><div class="hint-btn" onclick="openHint('D')">?</div><div class="edit-btn calc-edit-btn" onclick="openEdit('D')">✎</div></div><div class="options" id="D"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">I</span><span class="param-name">Integrity — компетентность команды</span><div class="hint-btn" onclick="openHint('I')">?</div><div class="edit-btn calc-edit-btn" onclick="openEdit('I')">✎</div></div><div class="options" id="I"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">C1</span><span class="param-name">Commitment — поддержка руководства</span><div class="hint-btn" onclick="openHint('C1')">?</div><div class="edit-btn calc-edit-btn" onclick="openEdit('C1')">✎</div></div><div class="options" id="C1"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">C2</span><span class="param-name">Commitment — поддержка команды</span><div class="hint-btn" onclick="openHint('C2')">?</div><div class="edit-btn calc-edit-btn" onclick="openEdit('C2')">✎</div></div><div class="options" id="C2"></div></div>
+    <div class="param-card"><div class="param-header"><span class="param-letter">E</span><span class="param-name">Effort — нагрузка сверх основной работы</span><div class="hint-btn" onclick="openHint('E')">?</div><div class="edit-btn calc-edit-btn" onclick="openEdit('E')">✎</div></div><div class="options" id="E"></div></div>
 
     <div class="result-card">
       <div class="progress-row">
@@ -121,6 +186,7 @@
 <script src="js/config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/screens/start.js"></script>
+<script src="js/screens/setup.js"></script>
 <script src="js/screens/calculator.js"></script>
 </body>
 </html>
