@@ -82,3 +82,15 @@ body { background: #f0f0f0; display: flex; justify-content: center; font-family:
 .edit-field-input { flex: 1; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--qt-border); background: var(--qt-surface); font-size: 13px; color: var(--qt-dark); font-family: inherit; outline: none; transition: border-color 0.15s; }
 .edit-field-input:focus { border-color: var(--qt-accent); }
 .edit-note { font-size: 11px; color: #bbb; margin-bottom: 14px; line-height: 1.5; }
+
+/* ── Экран 1: Старт ── */
+.start-heading { font-size: 13px; color: var(--qt-muted); margin-top: 8px; margin-bottom: 4px; }
+#screen-start { gap: 12px; }
+.mode-card { display: flex; align-items: flex-start; gap: 14px; background: #fff; border: 0.5px solid var(--qt-border); border-radius: 12px; padding: 16px; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.mode-card:hover { background: var(--qt-accent-light); border-color: #13899A; }
+.mode-card:hover .mode-title { color: #13899A; }
+.mode-card:hover .mode-icon-wrap { background: #C7E6EA; }
+.mode-icon-wrap { width: 44px; height: 44px; border-radius: 10px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 24px; }
+.mode-content { flex: 1; }
+.mode-title { font-size: 15px; font-weight: 600; color: var(--qt-dark); margin-bottom: 4px; transition: color 0.15s; }
+.mode-desc { font-size: 13px; color: var(--qt-muted); line-height: 1.4; }

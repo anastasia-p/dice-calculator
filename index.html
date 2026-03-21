@@ -35,7 +35,27 @@
     </div>
   </div>
 
-  <div class="tg-body">
+  <!-- Экран 1: Старт -->
+  <div class="tg-body" id="screen-start">
+    <div class="start-heading">Как хотите оценить проект?</div>
+    <div class="mode-card" onclick="showScreen('calculator')">
+      <div class="mode-icon-wrap">👤</div>
+      <div class="mode-content">
+        <div class="mode-title">Оценю сам</div>
+        <div class="mode-desc">Самостоятельная оценка без привлечения коллег</div>
+      </div>
+    </div>
+    <div class="mode-card" onclick="showScreen('setup')">
+      <div class="mode-icon-wrap">👥</div>
+      <div class="mode-content">
+        <div class="mode-title">Работа в команде</div>
+        <div class="mode-desc">Создайте сессию, пригласите коллег — каждый оценивает независимо, потом смотрите расхождения</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Экран 3: Калькулятор -->
+  <div class="tg-body" id="screen-calculator" style="display:none;">
     <div class="project-card">
       <div class="project-label">Название проекта</div>
       <input class="project-input" id="project-name" type="text" placeholder="Например: Внедрение автотестов" maxlength="80" />
@@ -99,7 +119,8 @@
 </div>
 
 <script src="js/config.js"></script>
-<script src="js/screens/calculator.js"></script>
 <script src="js/app.js"></script>
+<script src="js/screens/start.js"></script>
+<script src="js/screens/calculator.js"></script>
 </body>
 </html>
