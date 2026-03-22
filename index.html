@@ -106,6 +106,7 @@
 
   <!-- Экран 3: Калькулятор -->
   <div class="tg-body" id="screen-calculator" style="display:none;">
+    <button class="back-btn" onclick="showScreen(currentMode === 'team' ? 'setup' : 'start')">← Назад</button>
     <!-- Соло: редактируемое поле -->
     <div class="project-card" id="project-card-solo">
       <div class="project-label">Название проекта</div>
@@ -165,6 +166,7 @@
 
   <!-- Экран 4: Ожидание -->
   <div class="tg-body" id="screen-waiting" style="display:none;">
+    <button class="back-btn" onclick="showScreen('calculator')">← Назад</button>
     <div class="project-card">
       <div class="project-label">Проект</div>
       <div class="project-name-display" id="waiting-project-name">Без названия</div>
@@ -190,6 +192,40 @@
         <div class="action-hint">Результаты станут доступны всем участникам</div>
       </div>
     </div>
+  </div>
+
+  <!-- Экран 5: Результаты -->
+  <div class="tg-body" id="screen-results" style="display:none;">
+    <button class="back-btn" onclick="showScreen('start')">← Назад</button>
+    <div class="project-card">
+      <div class="project-label">Проект</div>
+      <div class="project-name-display" id="results-project-name">Без названия</div>
+    </div>
+
+    <div class="results-card">
+      <div class="results-section-title">Итоговые баллы</div>
+      <div id="results-scores"></div>
+      <div class="results-avg-divider"></div>
+      <div class="results-avg-row">
+        <span class="results-avg-label">Среднее</span>
+        <span class="results-avg-score" id="results-avg-score">—</span>
+        <span id="results-avg-zone" class="result-zone"></span>
+      </div>
+    </div>
+
+    <div class="results-card">
+      <div class="results-section-title">Расхождения</div>
+      <div class="results-subtitle">! — стоит обсудить с командой</div>
+      <div class="results-legend">
+        <div class="legend-item"><span class="legend-dot dot-unanimous"></span>единодушно</div>
+        <div class="legend-item"><span class="legend-dot dot-discord"></span>расхождение</div>
+        <div class="legend-item"><span class="legend-dot dot-critical"></span>критическое</div>
+      </div>
+      <div class="results-avg-divider"></div>
+      <div id="results-params"></div>
+    </div>
+
+    <button class="save-btn" id="copy-results-btn" onclick="copyResults()"><span>⎘</span> Скопировать результаты</button>
   </div>
 
   <div class="overlay" id="overlay" onclick="closeAll()"></div>
@@ -218,5 +254,6 @@
 <script src="js/screens/setup.js"></script>
 <script src="js/screens/calculator.js"></script>
 <script src="js/screens/waiting.js"></script>
+<script src="js/screens/results.js"></script>
 </body>
 </html>

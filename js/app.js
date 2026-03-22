@@ -12,6 +12,7 @@ function showScreen(name) {
   if (name === 'calculator') initCalculator();
   if (name === 'setup') initSetup();
   if (name === 'waiting') initWaiting();
+  if (name === 'results') initResults();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

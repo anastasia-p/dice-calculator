@@ -142,3 +142,33 @@ body { background: #f0f0f0; display: flex; justify-content: center; font-family:
 #waiting-organizer-actions { display: flex; flex-direction: column; gap: 0; background: var(--qt-white); border-radius: 12px; border: 0.5px solid var(--qt-border); overflow: hidden; }
 #waiting-organizer-actions .setup-action-row { padding: 12px 14px; }
 #waiting-organizer-actions .setup-divider { margin: 0; }
+
+/* ── Экран 5: Результаты ── */
+.results-card { background: var(--qt-white); border-radius: 12px; border: 0.5px solid var(--qt-border); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.results-section-title { font-size: 11px; font-weight: 600; color: var(--qt-muted); text-transform: uppercase; letter-spacing: 0.6px; }
+.results-subtitle { font-size: 11px; font-weight: 400; color: var(--qt-muted); text-transform: none; letter-spacing: 0; margin-left: 4px; }
+.results-score-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+.results-participant-name { flex: 1; font-size: 14px; color: var(--qt-dark); }
+.results-participant-score { font-size: 18px; font-weight: 600; color: var(--qt-dark); min-width: 28px; text-align: right; }
+.results-avg-divider { height: 0.5px; background: var(--qt-border); }
+.results-avg-row { display: flex; align-items: center; gap: 10px; }
+.results-avg-label { flex: 1; font-size: 13px; color: var(--qt-muted); }
+.results-avg-score { font-size: 18px; font-weight: 600; color: var(--qt-dark); min-width: 28px; text-align: right; }
+.results-legend { display: flex; flex-direction: column; gap: 6px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; line-height: 8px; color: var(--qt-muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: block; }
+.dot-unanimous { background: #639922; }
+.dot-discord   { background: #BA7517; }
+.dot-critical  { background: #E24B4A; }
+.results-param-block { display: flex; flex-direction: column; gap: 8px; padding: 14px 0 14px; }
+.results-param-header { display: flex; align-items: center; gap: 6px; }
+.results-param-name { flex: 1; font-size: 13px; color: var(--qt-dark); }
+.results-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+.badge-unanimous { background: rgba(99,153,34,0.12); color: #3B6D11; }
+.badge-discord   { background: rgba(186,117,23,0.12); color: #854F0B; }
+.badge-critical  { background: rgba(226,75,74,0.12); color: #A32D2D; }
+.results-chips { display: flex; gap: 6px; flex-wrap: wrap; padding-left: 28px; }
+.results-chip { display: flex; align-items: center; gap: 4px; background: var(--qt-surface); border: 0.5px solid var(--qt-border); border-radius: 20px; padding: 3px 8px 3px 3px; }
+.results-chip-avatar { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+.results-chip-num { font-size: 13px; font-weight: 500; color: var(--qt-dark); }
+.results-param-divider { height: 0.5px; background: var(--qt-border); }
