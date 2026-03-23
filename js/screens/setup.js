@@ -3,7 +3,7 @@
 let sessionId = null;
 let sessionLink = null;
 
-function createSession() {
+async function createSession() {
   const name = document.getElementById('setup-project-name').value.trim() || 'Без названия';
 
   const btn = document.getElementById('create-btn');
@@ -11,16 +11,34 @@ function createSession() {
   btn.style.borderColor = '#41bfd0';
   btn.style.color = '#ffffff';
   btn.style.cursor = 'default';
-  btn.textContent = 'Сессия создана';
+  btn.textContent = 'Создаём...';
   btn.disabled = true;
 
-  // Заглушка: генерируем ID сессии (позже заменится на Firebase)
-  sessionId = Math.random().toString(36).slice(2, 10).toUpperCase();
-  sessionLink = 'https://t.me/DICE_bcg_bot?startapp=' + sessionId;
+  try {
+    const id = await window.FB.createSession(name, JSON.parse(JSON.stringify(labels)));
+    sessionId = id;
+    sessionLink = 'https://t.me/DICE_bcg_bot?startapp=' + id;
+    currentSessionId = id;
+    currentSession = {
+      projectName: name,
+      organizerId: window.FB.userId,
+      status: 'active',
+      labels: JSON.parse(JSON.stringify(labels))
+    };
 
-  setTimeout(() => {
-    document.getElementById('setup-after').style.display = 'flex';
-  }, 1000);
+    btn.textContent = 'Сессия создана';
+    setTimeout(() => {
+      document.getElementById('setup-after').style.display = 'flex';
+    }, 1000);
+  } catch (e) {
+    console.error('Ошибка создания сессии:', e);
+    btn.textContent = 'Ошибка — попробуйте ещё раз';
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    btn.style.cursor = '';
+    btn.disabled = false;
+  }
 }
 
 function shareSession() {

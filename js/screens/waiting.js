@@ -1,30 +1,33 @@
 // Экран 4 — Ожидание
 
-// Заглушка: будет заменена на данные из Firebase
-let waitingParticipants = [];
-let isOrganizer = false;
-
 function initWaiting() {
-  // Название проекта
-  const projectName = document.getElementById('project-name-display').textContent || 'Без названия';
-  document.getElementById('waiting-project-name').textContent = projectName;
+  document.getElementById('waiting-project-name').textContent =
+    currentSession?.projectName || 'Без названия';
 
-  // Заглушка: организатор уже ответил
-  const participantName = document.getElementById('participant-name').value.trim() || 'Участник 1';
-  waitingParticipants = [
-    { name: participantName, colorIndex: 0, submitted: true, isOrganizer: true }
-  ];
-  isOrganizer = true;
+  window.FB.listenToSession(currentSessionId, session => {
+    if (!session) return;
+    currentSession = session;
 
-  renderWaiting();
+    const isOrg = session.organizerId === window.FB.userId;
+    document.getElementById('waiting-organizer-actions').style.display = isOrg ? 'flex' : 'none';
+    document.getElementById('waiting-participant-info').style.display = isOrg ? 'none' : 'block';
 
-  // Показываем кнопки организатора
-  document.getElementById('waiting-organizer-actions').style.display = isOrganizer ? 'flex' : 'none';
+    const participants = session.participants
+      ? Object.values(session.participants).sort((a, b) => a.colorIndex - b.colorIndex)
+      : [];
+    renderWaiting(participants);
+
+    // Сессия завершена — переводим всех на результаты
+    if (session.status === 'completed') {
+      window.FB.stopListening(currentSessionId);
+      showScreen('results');
+    }
+  });
 }
 
-function renderWaiting() {
-  const total = waitingParticipants.length;
-  const answered = waitingParticipants.filter(p => p.submitted).length;
+function renderWaiting(participants) {
+  const total = participants.length;
+  const answered = participants.filter(p => p.submittedAt).length;
   const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
 
   document.getElementById('waiting-progress-text').textContent = 'Ответили ' + answered + ' из ' + total;
@@ -32,7 +35,7 @@ function renderWaiting() {
 
   const container = document.getElementById('waiting-participants');
   container.innerHTML = '';
-  waitingParticipants.forEach(p => {
+  participants.forEach(p => {
     const color = PARTICIPANT_COLORS[p.colorIndex % PARTICIPANT_COLORS.length];
     const row = document.createElement('div');
     row.className = 'waiting-participant-row';
@@ -40,9 +43,11 @@ function renderWaiting() {
       '<div class="participant-avatar" style="background:' + color.bg + ';color:' + color.text + '">' +
         p.name.charAt(0).toUpperCase() +
       '</div>' +
-      '<div class="waiting-participant-name">' + p.name + (p.isOrganizer ? ' <span class="organizer-badge">организатор</span>' : '') + '</div>' +
-      '<div class="waiting-status ' + (p.submitted ? 'waiting-status-done' : 'waiting-status-wait') + '">' +
-        (p.submitted ? '✓' : 'ждем') +
+      '<div class="waiting-participant-name">' + p.name +
+        (p.isOrganizer ? ' <span class="organizer-badge">организатор</span>' : '') +
+      '</div>' +
+      '<div class="waiting-status ' + (p.submittedAt ? 'waiting-status-done' : 'waiting-status-wait') + '">' +
+        (p.submittedAt ? '✓' : 'ждем') +
       '</div>';
     container.appendChild(row);
   });
@@ -58,10 +63,18 @@ function shareAgain() {
   }
 }
 
-function finishSession() {
+async function finishSession() {
   const btn = event.target;
   btn.style.background = '#41bfd0'; btn.style.borderColor = '#41bfd0';
   btn.style.color = '#ffffff'; btn.style.cursor = 'default';
-  btn.textContent = 'Сессия завершена'; btn.disabled = true;
-  setTimeout(() => { showScreen('results'); }, 800);
+  btn.textContent = 'Завершаем...'; btn.disabled = true;
+
+  try {
+    await window.FB.completeSession(currentSessionId);
+    // Листенер сам обнаружит status === 'completed' и перейдёт на результаты
+  } catch (e) {
+    console.error('Ошибка завершения сессии:', e);
+    btn.textContent = 'Ошибка — попробуйте ещё раз';
+    btn.disabled = false;
+  }
 }

@@ -24,20 +24,16 @@ function avatarHtml(p) {
 }
 
 function initResults() {
-  // Название проекта
-  const projectName = document.getElementById('waiting-project-name').textContent;
-  document.getElementById('results-project-name').textContent = projectName;
+  if (!currentSession) return;
 
-  // Берём реальные ответы организатора из калькулятора
-  const organizerName = document.getElementById('participant-name').value.trim() || 'Участник 1';
-  const organizerAnswers = { D: vals.D || 2, I: vals.I || 2, C1: vals.C1 || 2, C2: vals.C2 || 2, E: vals.E || 2 };
+  document.getElementById('results-project-name').textContent =
+    currentSession.projectName || 'Без названия';
 
-  // Заглушка: добавляем двух участников с другими оценками
-  const participants = [
-    { name: organizerName, colorIndex: 0, isOrganizer: true, answers: organizerAnswers },
-    { name: 'Участник 2', colorIndex: 1, isOrganizer: false, answers: { D: 1, I: 3, C1: 2, C2: 2, E: 2 } },
-    { name: 'Участник 3', colorIndex: 2, isOrganizer: false, answers: { D: 2, I: 2, C1: 1, C2: 4, E: 3 } },
-  ];
+  const participants = currentSession.participants
+    ? Object.values(currentSession.participants)
+        .filter(p => p.answers)
+        .sort((a, b) => a.colorIndex - b.colorIndex)
+    : [];
 
   renderScores(participants);
   renderParams(participants);

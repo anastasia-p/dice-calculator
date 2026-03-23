@@ -137,16 +137,34 @@ function update() {
   applyZoneToInput(currentZoneObj);
 }
 
-function saveResult() {
+async function saveResult() {
   const btn = document.getElementById('save-btn');
 
-  // Командный режим — отправляем оценку
+  // Командный режим — отправляем оценку в Firebase
   if (currentMode === 'team') {
     btn.onmouseenter = null; btn.onmouseleave = null;
     btn.style.background = '#41bfd0'; btn.style.borderColor = '#41bfd0';
     btn.style.color = '#ffffff'; btn.style.cursor = 'default';
-    btn.textContent = 'Оценка отправлена'; btn.disabled = true;
-    setTimeout(() => { showScreen('waiting'); }, 1000);
+    btn.textContent = 'Отправляем...'; btn.disabled = true;
+
+    const name = document.getElementById('participant-name').value.trim();
+    const isOrg = currentSession && currentSession.organizerId === window.FB.userId;
+
+    try {
+      await window.FB.submitAnswers(
+        currentSessionId,
+        name || null,
+        { D: vals.D, I: vals.I, C1: vals.C1, C2: vals.C2, E: vals.E },
+        isOrg
+      );
+      btn.textContent = 'Оценка отправлена';
+      setTimeout(() => { showScreen('waiting'); }, 1000);
+    } catch (e) {
+      console.error('Ошибка отправки оценки:', e);
+      btn.textContent = 'Ошибка — попробуйте ещё раз';
+      btn.disabled = false;
+      setIdleBtn();
+    }
     return;
   }
 
