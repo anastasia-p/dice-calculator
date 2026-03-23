@@ -151,9 +151,9 @@ body { background: #f0f0f0; display: flex; justify-content: center; font-family:
 .results-participant-name { flex: 1; font-size: 14px; color: var(--qt-dark); }
 .results-participant-score { font-size: 18px; font-weight: 600; color: var(--qt-dark); min-width: 28px; text-align: right; }
 .results-avg-divider { height: 0.5px; background: var(--qt-border); }
-.results-avg-row { display: flex; align-items: center; gap: 10px; }
+.results-avg-row { display: flex; align-items: center; }
 .results-avg-label { flex: 1; font-size: 13px; color: var(--qt-muted); }
-.results-avg-score { font-size: 18px; font-weight: 600; color: var(--qt-dark); min-width: 28px; text-align: right; }
+#results-avg-zone { font-size: 14px; font-weight: 500; }
 .results-legend { display: flex; flex-direction: column; gap: 6px; }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; line-height: 8px; color: var(--qt-muted); }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: block; }

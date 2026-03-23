@@ -66,13 +66,19 @@ function renderScores(participants) {
     container.appendChild(row);
   });
 
-  // Среднее
-  const avg = Math.round(totalScore / participants.length);
-  const avgZone = getZone(avg);
-  document.getElementById('results-avg-score').textContent = avg;
+  // Итоговая зона — по большинству голосов, при ничьей берётся более пессимистичная
+  const counts = { 'zone-win': 0, 'zone-warn': 0, 'zone-fail': 0 };
+  participants.forEach(p => { counts[getZone(calcScore(p.answers)).cls]++; });
+  const max = Math.max(counts['zone-win'], counts['zone-warn'], counts['zone-fail']);
+  const avgZone = counts['zone-fail'] === max
+    ? { label: 'Проблема',     cls: 'zone-fail' }
+    : counts['zone-warn'] === max
+      ? { label: 'Беспокойство', cls: 'zone-warn' }
+      : { label: 'Выигрыш',      cls: 'zone-win' };
   const avgZoneEl = document.getElementById('results-avg-zone');
   avgZoneEl.textContent = avgZone.label;
-  avgZoneEl.className = 'result-zone ' + avgZone.cls;
+  const zoneColors = { 'zone-win': '#4a7c59', 'zone-warn': '#8a6a2a', 'zone-fail': '#c0392b' };
+  avgZoneEl.style.color = zoneColors[avgZone.cls];
 }
 
 function renderParams(participants) {
