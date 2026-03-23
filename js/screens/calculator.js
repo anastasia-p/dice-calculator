@@ -56,6 +56,8 @@ function applyEdit() {
     if (val) labels[editingParam][i] = val;
   }
   renderOptions(editingParam);
+  const setupScreen = document.getElementById('screen-setup');
+  if (setupScreen && setupScreen.style.display !== 'none') invalidateSession();
   if (typeof ym !== 'undefined') ym(108173318, 'reachGoal', 'edit_labels', { param: editingParam });
   const btn = document.getElementById('edit-save-btn');
   btn.onmouseenter = null; btn.onmouseleave = null;
@@ -193,16 +195,18 @@ function initCalculator() {
   document.getElementById('project-card-solo').style.display = isTeam ? 'none' : 'block';
   document.getElementById('project-card-team').style.display = isTeam ? 'block' : 'none';
   document.getElementById('participant-name-card').style.display = isTeam ? 'block' : 'none';
-  if (isTeam) document.getElementById('participant-name').value = '';
-
   // Кнопки ✎ редактирования вариантов — только в соло-режиме
   document.querySelectorAll('.calc-edit-btn').forEach(btn => {
     btn.style.display = isTeam ? 'none' : '';
   });
 
-  // Сброс значений при каждом входе в калькулятор
-  order.forEach(p => { vals[p] = null; });
-  if (!isTeam) document.getElementById('project-name').value = '';
+  // В командном режиме сохраняем значения при возврате с экрана ожидания
+  const hasValues = order.some(p => vals[p] !== null);
+  if (!isTeam || !hasValues) {
+    order.forEach(p => { vals[p] = null; });
+    if (!isTeam) document.getElementById('project-name').value = '';
+    if (isTeam) document.getElementById('participant-name').value = '';
+  }
 
   order.forEach(p => renderOptions(p));
   update();

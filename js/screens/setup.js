@@ -73,11 +73,10 @@ function goToCalculator() {
   showScreen('calculator');
 }
 
-function initSetup() {
-  // Сбрасываем состояние при каждом открытии экрана
+function invalidateSession() {
+  if (!sessionId) return;
   sessionId = null;
   sessionLink = null;
-  document.getElementById('setup-project-name').value = '';
   document.getElementById('setup-after').style.display = 'none';
   const btn = document.getElementById('create-btn');
   btn.textContent = 'Создать сессию';
@@ -86,4 +85,32 @@ function initSetup() {
   btn.style.color = '';
   btn.style.cursor = '';
   btn.disabled = false;
+}
+
+function initSetup() {
+  if (sessionId) {
+    // Возврат с уже созданной сессией — восстанавливаем состояние
+    document.getElementById('setup-after').style.display = 'flex';
+    const btn = document.getElementById('create-btn');
+    btn.style.background = '#41bfd0';
+    btn.style.borderColor = '#41bfd0';
+    btn.style.color = '#ffffff';
+    btn.style.cursor = 'default';
+    btn.textContent = 'Сессия создана';
+    btn.disabled = true;
+  } else {
+    sessionId = null;
+    sessionLink = null;
+    document.getElementById('setup-project-name').value = '';
+    document.getElementById('setup-after').style.display = 'none';
+    const btn = document.getElementById('create-btn');
+    btn.textContent = 'Создать сессию';
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    btn.style.cursor = '';
+    btn.disabled = false;
+  }
+
+  document.getElementById('setup-project-name').oninput = invalidateSession;
 }
