@@ -26,11 +26,11 @@ function initWaiting() {
 }
 
 function renderWaiting(participants) {
-  const total = participants.length;
+  const expected = currentSession?.participantCount || participants.length;
   const answered = participants.filter(p => p.submittedAt).length;
-  const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+  const pct = expected > 0 ? Math.round((answered / expected) * 100) : 0;
 
-  document.getElementById('waiting-progress-text').textContent = 'Ответили ' + answered + ' из ' + total;
+  document.getElementById('waiting-progress-text').textContent = 'Ответили ' + answered + ' из ' + expected;
   document.getElementById('waiting-bar-fill').style.width = pct + '%';
 
   const container = document.getElementById('waiting-participants');
@@ -68,8 +68,34 @@ function shareAgain() {
   }
 }
 
-async function finishSession() {
-  const btn = event.target;
+function finishSession() {
+  const participants = currentSession?.participants
+    ? Object.values(currentSession.participants)
+    : [];
+  const expected = currentSession?.participantCount || 0;
+  const answered = participants.filter(p => p.submittedAt).length;
+
+  if (expected > 0 && answered < expected) {
+    // Не все ответили — показываем диалог
+    document.getElementById('finish-overlay').style.display = 'block';
+    document.getElementById('finish-dialog').style.display = 'block';
+  } else {
+    doFinishSession();
+  }
+}
+
+function cancelFinish() {
+  document.getElementById('finish-overlay').style.display = 'none';
+  document.getElementById('finish-dialog').style.display = 'none';
+}
+
+function confirmFinish() {
+  cancelFinish();
+  doFinishSession();
+}
+
+async function doFinishSession() {
+  const btn = document.getElementById('waiting-finish-btn');
   btn.style.background = '#41bfd0'; btn.style.borderColor = '#41bfd0';
   btn.style.color = '#ffffff'; btn.style.cursor = 'default';
   btn.textContent = 'Завершаем...'; btn.disabled = true;

@@ -5,6 +5,7 @@ let sessionLink = null;
 
 async function createSession() {
   const name = document.getElementById('setup-project-name').value.trim() || 'Без названия';
+  const participantCount = parseInt(document.getElementById('setup-participant-count').value) || 0;
 
   const btn = document.getElementById('create-btn');
   btn.style.background = '#41bfd0';
@@ -15,7 +16,7 @@ async function createSession() {
   btn.disabled = true;
 
   try {
-    const id = await window.FB.createSession(name, JSON.parse(JSON.stringify(labels)));
+    const id = await window.FB.createSession(name, JSON.parse(JSON.stringify(labels)), participantCount);
     sessionId = id;
     sessionLink = 'https://t.me/' + BOT_USERNAME + '/' + APP_SHORT_NAME + '?startapp=' + id;
     currentSessionId = id;
@@ -23,6 +24,7 @@ async function createSession() {
       projectName: name,
       organizerId: window.FB.userId,
       status: 'active',
+      participantCount,
       labels: JSON.parse(JSON.stringify(labels))
     };
 
@@ -124,6 +126,7 @@ function initSetup() {
     sessionId = null;
     sessionLink = null;
     document.getElementById('setup-project-name').value = '';
+    document.getElementById('setup-participant-count').value = '';
     document.getElementById('setup-after').style.display = 'none';
     const btn = document.getElementById('create-btn');
     btn.textContent = 'Создать сессию';
@@ -135,4 +138,5 @@ function initSetup() {
   }
 
   document.getElementById('setup-project-name').oninput = invalidateSession;
+  document.getElementById('setup-participant-count').oninput = invalidateSession;
 }

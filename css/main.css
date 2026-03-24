@@ -172,3 +172,11 @@ body { background: #f0f0f0; display: flex; justify-content: center; font-family:
 .results-chip-avatar { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
 .results-chip-num { font-size: 13px; font-weight: 500; color: var(--qt-dark); }
 .results-param-divider { height: 0.5px; background: var(--qt-border); }
+
+/* Диалог подтверждения завершения сессии */
+.finish-dialog { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: #fff; border-radius: 16px 16px 0 0; padding: 24px 20px 32px; z-index: 200; box-shadow: 0 -4px 24px rgba(0,0,0,0.12); }
+.finish-dialog-text { font-size: 15px; color: var(--qt-dark); text-align: center; line-height: 1.5; margin-bottom: 20px; }
+.finish-dialog-actions { display: flex; gap: 10px; }
+.finish-dialog-btn { flex: 1; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; border: none; }
+.finish-dialog-wait { background: var(--qt-surface); color: var(--qt-dark); border: 0.5px solid var(--qt-border); }
+.finish-dialog-confirm { background: #E24B4A; color: #fff; }

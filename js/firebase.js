@@ -36,13 +36,14 @@ function resolveUserId() {
 const userId = resolveUserId();
 
 // Создать новую сессию (только организатор)
-async function createSession(projectName, labelsObj) {
+async function createSession(projectName, labelsObj, participantCount) {
   const sessionId = Math.random().toString(36).slice(2, 10).toUpperCase();
   await set(ref(db, 'sessions/' + sessionId), {
     projectName,
     createdAt: serverTimestamp(),
     organizerId: userId,
     status: 'active',
+    participantCount: participantCount || 0,
     labels: labelsObj
   });
   return sessionId;
