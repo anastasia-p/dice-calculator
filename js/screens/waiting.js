@@ -59,7 +59,7 @@ function shareAgain() {
     + '&text=' + encodeURIComponent('Присоединяйся к оценке проекта в DICE-калькуляторе');
 
   if (window.Telegram?.WebApp) {
-    Telegram.WebApp.openTelegramLink(shareUrl);
+    Telegram.WebApp.openLink(shareUrl);
   } else if (navigator.share) {
     navigator.share({ title: 'DICE-калькулятор', url: sessionLink });
   } else {
