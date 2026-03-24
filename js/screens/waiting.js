@@ -107,8 +107,13 @@ function cancelFinish() {
 }
 
 function confirmFinish() {
-  cancelFinish();
+  closeFinishDialog();
   doFinishSession();
+}
+
+function closeFinishDialog() {
+  document.getElementById('finish-overlay').style.display = 'none';
+  document.getElementById('finish-dialog').style.display = 'none';
 }
 
 async function doFinishSession() {
