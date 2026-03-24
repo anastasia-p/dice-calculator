@@ -78,7 +78,7 @@ async function submitAnswers(sessionId, name, answers, isOrganizer) {
 
 // Завершить сессию (только организатор)
 async function completeSession(sessionId) {
-  await update(ref(db, 'sessions/' + sessionId), { status: 'completed' });
+  await set(ref(db, 'sessions/' + sessionId + '/status'), 'completed');
 }
 
 // Подписаться на изменения сессии в реальном времени
