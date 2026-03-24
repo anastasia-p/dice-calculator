@@ -118,11 +118,43 @@ function renderParams(participants) {
 
 function copyResults() {
   const btn = document.getElementById('copy-results-btn');
-  const projectName = document.getElementById('waiting-project-name').textContent;
-  const lines = ['DICE-калькулятор | Quality Trek', '================================', '', 'Проект: ' + projectName, ''];
+  const projectName = currentSession?.projectName || 'Без названия';
+  const date = new Date().toLocaleDateString('ru-RU');
 
-  // TODO: сформировать полный текст после Firebase интеграции
-  lines.push('Результаты командной сессии скопированы.');
+  const participants = currentSession?.participants
+    ? Object.values(currentSession.participants)
+        .filter(p => p.answers)
+        .sort((a, b) => a.colorIndex - b.colorIndex)
+    : [];
+
+  const majorityZone = participants.length ? getMajorityZone(participants).label : '—';
+
+  const discLabels = { unanimous: 'единодушно', discord: 'расхождение', critical: 'критическое' };
+  const paramNames = { D: 'D ', I: 'I ', C1: 'C1', C2: 'C2', E: 'E ' };
+
+  const lines = [
+    'DICE-калькулятор | Quality Trek',
+    '================================', '',
+    'Проект: ' + projectName,
+    'Дата:   ' + date, '',
+    'ИТОГ',
+    majorityZone, '',
+    'ОЦЕНКИ УЧАСТНИКОВ',
+  ];
+
+  participants.forEach(p => {
+    const score = calcScore(p.answers);
+    const zone = getZone(score);
+    lines.push(p.name + ' — ' + score + '  (' + zone.label + ')');
+  });
+
+  lines.push('', 'РАСХОЖДЕНИЯ ПО ПАРАМЕТРАМ');
+  order.forEach(param => {
+    const values = participants.map(p => p.answers[param]);
+    const disc = discLabels[getDiscrepancy(values)];
+    lines.push(paramNames[param] + '  ' + disc.padEnd(14) + values.join(' / '));
+  });
+
   lines.push('', '================================', 'https://quality-trek.ru');
 
   const text = lines.join('\n');
