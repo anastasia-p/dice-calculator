@@ -27,5 +27,7 @@ export function getMajorityZone(participants) {
   return                                   { label: 'Выигрыш',      cls: 'zone-win' };
 }
 
-// Экспорт в глобальный scope для использования в обычных скриптах
-window.DICE = { calcScore, getZone, getDiscrepancy, getMajorityZone };
+// Экспорт в глобальный scope для использования в обычных скриптах (только в браузере)
+if (typeof window !== 'undefined') {
+  window.DICE = { calcScore, getZone, getDiscrepancy, getMajorityZone };
+}
