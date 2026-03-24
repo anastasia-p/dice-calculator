@@ -17,7 +17,7 @@ async function createSession() {
   try {
     const id = await window.FB.createSession(name, JSON.parse(JSON.stringify(labels)));
     sessionId = id;
-    sessionLink = 'https://t.me/DICE_bcg_bot?startapp=' + id;
+    sessionLink = 'https://t.me/' + BOT_USERNAME + '?startapp=' + id;
     currentSessionId = id;
     currentSession = {
       projectName: name,

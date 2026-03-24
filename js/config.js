@@ -1,3 +1,7 @@
+// Окружение: test (localhost / netlify) или prod (github.io)
+const IS_PROD = location.hostname.includes('github.io');
+const BOT_USERNAME = IS_PROD ? 'DICE_bcg_bot' : 'DICE_bcg_test_bot';
+
 const order = ['D', 'I', 'C1', 'C2', 'E'];
 
 const labels = {
