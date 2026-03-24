@@ -85,8 +85,25 @@ function finishSession() {
 }
 
 function cancelFinish() {
-  document.getElementById('finish-overlay').style.display = 'none';
-  document.getElementById('finish-dialog').style.display = 'none';
+  const btn = document.querySelector('.finish-dialog-wait');
+  if (btn) {
+    btn.textContent = 'Хорошо, ждем';
+    btn.style.background = '#41bfd0';
+    btn.style.borderColor = '#41bfd0';
+    btn.style.color = '#ffffff';
+    btn.disabled = true;
+  }
+  setTimeout(() => {
+    document.getElementById('finish-overlay').style.display = 'none';
+    document.getElementById('finish-dialog').style.display = 'none';
+    if (btn) {
+      btn.textContent = 'Дождаться';
+      btn.style.background = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      btn.disabled = false;
+    }
+  }, 2000);
 }
 
 function confirmFinish() {
