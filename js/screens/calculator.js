@@ -104,7 +104,7 @@ function update() {
   if (!allDone) return;
   if (!wasDone && typeof ym !== 'undefined') ym(108173318, 'reachGoal', 'calculator_filled');
 
-  const score = vals.D + 2 * vals.I + 2 * vals.C1 + vals.C2 + vals.E;
+  const score = window.DICE.calcScore(vals);
   currentScore = score;
   document.getElementById('score').textContent = score;
   document.getElementById('chip-D').textContent = 'D=' + vals.D;

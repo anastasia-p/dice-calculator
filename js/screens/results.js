@@ -1,21 +1,9 @@
 // Экран 5 — Результаты
-
-function calcScore(answers) {
-  return answers.D + 2 * answers.I + 2 * answers.C1 + answers.C2 + answers.E;
-}
-
-function getZone(score) {
-  if (score <= 13) return { label: 'Выигрыш', cls: 'zone-win' };
-  if (score <= 17) return { label: 'Беспокойство', cls: 'zone-warn' };
-  return { label: 'Проблема', cls: 'zone-fail' };
-}
-
-function getDiscrepancy(values) {
-  const unique = [...new Set(values)];
-  if (unique.length === 1) return 'unanimous';
-  if (values.includes(1) && values.includes(4)) return 'critical';
-  return 'discord';
-}
+// Чистые функции живут в js/logic.js → window.DICE
+const calcScore      = (answers)      => window.DICE.calcScore(answers);
+const getZone        = (score)        => window.DICE.getZone(score);
+const getDiscrepancy = (values)       => window.DICE.getDiscrepancy(values);
+const getMajorityZone = (participants) => window.DICE.getMajorityZone(participants);
 
 function avatarHtml(p) {
   const color = PARTICIPANT_COLORS[p.colorIndex % PARTICIPANT_COLORS.length];
@@ -62,15 +50,8 @@ function renderScores(participants) {
     container.appendChild(row);
   });
 
-  // Итоговая зона — по большинству голосов, при ничьей берётся более пессимистичная
-  const counts = { 'zone-win': 0, 'zone-warn': 0, 'zone-fail': 0 };
-  participants.forEach(p => { counts[getZone(calcScore(p.answers)).cls]++; });
-  const max = Math.max(counts['zone-win'], counts['zone-warn'], counts['zone-fail']);
-  const avgZone = counts['zone-fail'] === max
-    ? { label: 'Проблема',     cls: 'zone-fail' }
-    : counts['zone-warn'] === max
-      ? { label: 'Беспокойство', cls: 'zone-warn' }
-      : { label: 'Выигрыш',      cls: 'zone-win' };
+  // Итоговая зона — по большинству голосов
+  const avgZone = getMajorityZone(participants);
   const avgZoneEl = document.getElementById('results-avg-zone');
   avgZoneEl.textContent = avgZone.label;
   const zoneColors = { 'zone-win': '#4a7c59', 'zone-warn': '#8a6a2a', 'zone-fail': '#c0392b' };
