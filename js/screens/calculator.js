@@ -161,7 +161,7 @@ async function saveResult() {
       setTimeout(() => { showScreen('waiting'); }, 1000);
     } catch (e) {
       console.error('Ошибка отправки оценки:', e);
-      btn.textContent = 'Ошибка — попробуйте ещё раз';
+      btn.textContent = 'Ошибка — попробуйте еще раз';
       btn.disabled = false;
       setIdleBtn();
     }

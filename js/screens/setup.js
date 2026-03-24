@@ -11,7 +11,7 @@ async function createSession() {
   btn.style.borderColor = '#41bfd0';
   btn.style.color = '#ffffff';
   btn.style.cursor = 'default';
-  btn.textContent = 'Создаём...';
+  btn.textContent = 'Создаем...';
   btn.disabled = true;
 
   try {
@@ -32,7 +32,7 @@ async function createSession() {
     }, 1000);
   } catch (e) {
     console.error('Ошибка создания сессии:', e);
-    btn.textContent = 'Ошибка — попробуйте ещё раз';
+    btn.textContent = 'Ошибка — попробуйте еще раз';
     btn.style.background = '';
     btn.style.borderColor = '';
     btn.style.color = '';

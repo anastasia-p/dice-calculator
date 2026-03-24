@@ -64,7 +64,7 @@ function shareAgain() {
     Telegram.WebApp.openLink(shareUrl);
   } else {
     const btn = event.target;
-    copyToClipboard(sessionLink, btn, '⬆ Поделиться ссылкой ещё раз');
+    copyToClipboard(sessionLink, btn, '⬆ Поделиться ссылкой еще раз');
   }
 }
 
@@ -76,10 +76,10 @@ async function finishSession() {
 
   try {
     await window.FB.completeSession(currentSessionId);
-    // Листенер сам обнаружит status === 'completed' и перейдёт на результаты
+    // Листенер сам обнаружит status === 'completed' и перейдет на результаты
   } catch (e) {
     console.error('Ошибка завершения сессии:', e);
-    btn.textContent = 'Ошибка — попробуйте ещё раз';
+    btn.textContent = 'Ошибка — попробуйте еще раз';
     btn.disabled = false;
   }
 }

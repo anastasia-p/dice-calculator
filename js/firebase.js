@@ -54,7 +54,7 @@ async function getSession(sessionId) {
   return snap.exists() ? snap.val() : null;
 }
 
-// Отправить ответы участника (создаёт запись если её нет)
+// Отправить ответы участника (создает запись если ее нет)
 async function submitAnswers(sessionId, name, answers, isOrganizer) {
   const partRef = ref(db, 'sessions/' + sessionId + '/participants/' + userId);
   const snap = await get(partRef);
