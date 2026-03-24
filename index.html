@@ -39,14 +39,26 @@
   <div class="tg-body" id="screen-start">
     <div class="start-heading">Как хотите оценить проект?</div>
     <div class="mode-card" onclick="startSolo()">
-      <div class="mode-icon-wrap">👤</div>
+      <div class="mode-icon-wrap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="8" r="4" fill="#42becf"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#42becf" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
       <div class="mode-content">
         <div class="mode-title">Оценю сам</div>
         <div class="mode-desc">Самостоятельная оценка без привлечения коллег</div>
       </div>
     </div>
     <div class="mode-card" onclick="showScreen('setup')">
-      <div class="mode-icon-wrap">👥</div>
+      <div class="mode-icon-wrap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="8" r="3.5" fill="#42becf"/>
+          <path d="M2 20c0-3.5 3.1-6 7-6s7 2.5 7 6" stroke="#42becf" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="17" cy="8" r="3" fill="#42becf" opacity="0.6"/>
+          <path d="M17 14c2.5.3 5 1.8 5 5" stroke="#42becf" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+      </div>
       <div class="mode-content">
         <div class="mode-title">Работа в команде</div>
         <div class="mode-desc">Создайте сессию, пригласите коллег — каждый оценивает независимо, потом смотрите расхождения</div>
