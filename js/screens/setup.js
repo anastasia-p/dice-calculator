@@ -47,10 +47,10 @@ function shareSession() {
   const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(sessionLink)
     + '&text=' + encodeURIComponent('Присоединяйся к оценке проекта в DICE-калькуляторе');
 
-  if (window.Telegram?.WebApp) {
-    Telegram.WebApp.openLink(shareUrl);
-  } else if (navigator.share) {
+  if (navigator.share) {
     navigator.share({ title: 'DICE-калькулятор', url: sessionLink });
+  } else if (window.Telegram?.WebApp) {
+    Telegram.WebApp.openLink(shareUrl);
   } else {
     copyToClipboard(sessionLink, btn, '⬆ Поделиться');
   }
