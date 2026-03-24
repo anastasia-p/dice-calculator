@@ -44,8 +44,12 @@ async function createSession() {
 function shareSession() {
   if (!sessionLink) return;
   const btn = document.getElementById('share-btn');
+  const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(sessionLink)
+    + '&text=' + encodeURIComponent('Присоединяйся к оценке проекта в DICE-калькуляторе');
 
-  if (navigator.share) {
+  if (window.Telegram?.WebApp) {
+    Telegram.WebApp.openTelegramLink(shareUrl);
+  } else if (navigator.share) {
     navigator.share({ title: 'DICE-калькулятор', url: sessionLink });
   } else {
     copyToClipboard(sessionLink, btn, '⬆ Поделиться');
